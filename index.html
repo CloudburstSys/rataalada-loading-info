@@ -120,7 +120,7 @@
               Math.floor(Math.max(100, Math.min(100 * (1 - (n - Date.now()) / e)))) -
               100;
           document.getElementById("percent").innerHTML =
-            ">> loading percentage: " + i + "%";
+            "loading percentage: " + i + "%";
         }, 1000);
       }
 
@@ -162,7 +162,7 @@
               " second" +
               (time.seconds == 1 ? "" : "s");
 
-          document.getElementById("until").innerHTML = ">> completed in: " + str;
+          document.getElementById("until").innerHTML = "completed in: " + str;
         }, 1000);
       }
 
@@ -181,7 +181,7 @@
           blankLine();
           await sleep(100);
           await writeLine(
-            "upstanding-citizen@rataalada.com:~$ >> displayLoadProgress --full",
+            ">> displayLoadProgress --full",
             100
           );
           await sleep(2000);
