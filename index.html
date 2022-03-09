@@ -202,7 +202,7 @@
             "finishes on: " + new Date("Mar 11 2022 10:00:00 GMT-0800").toString(),
             25
           );
-          setInterval(() => {
+          setInterval(async () => {
             if(t - Date.now() < 0) {
               clearInterval(percentageUpdateInterval);
               clearInterval(untilUpdateInterval);
