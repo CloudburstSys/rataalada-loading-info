@@ -121,7 +121,7 @@
               100;
           document.getElementById("percent").innerHTML =
             "loading percentage: " + i + "%";
-        }, 1000);
+        }, 100);
       }
 
       function timeFormatter(time) {
@@ -163,7 +163,7 @@
               (time.seconds == 1 ? "" : "s");
 
           document.getElementById("until").innerHTML = "completed in: " + str;
-        }, 1000);
+        }, 100);
       }
 
       setTimeout(async () => {
@@ -212,7 +212,7 @@
               await writeLine("Network Error: Software caused connection abort");
               await writeLine(">> ", 10);
             }
-          },1000);
+          },100);
         } else {
           await sleep(500);
           await writeLine(
