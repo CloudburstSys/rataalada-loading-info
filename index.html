@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><?> Loading Info</title>
+    <style>
+      body {
+        background: black;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji;
+      }
+
+      .terminal:before {
+        content: "";
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        opacity: 0.08;
+        left: 0;
+        top: 0;
+        background: url("https://www.rataalada.com/terminal/grain.gif");
+      }
+
+      @media (min-width: 768px) {
+        @media (orientation: landscape) {
+          .lines {
+            padding-bottom: 70vh;
+          }
+        }
+      }
+
+      @media (min-width: 1024px) {
+        @media (hover: hover) and (pointer: fine) {
+          .lines {
+            padding-bottom: 5rem;
+          }
+        }
+      }
+
+      @media (-ms-high-contrast: active), (-ms-high-contrast: none) {
+        .lines {
+          max-height: 95vh;
+        }
+      }
+
+      .lines {
+        position: fixed;
+        max-height: 100vh;
+        width: 100vw;
+        overflow-y: auto;
+        padding-bottom: 50vh;
+      }
+
+      .line {
+        display: flex;
+        color: #25ff00;
+        text-shadow: 0 0 2px rgba(37 255 0, 0.7);
+        letter-spacing: 0.06em;
+        white-space: pre-wrap;
+        font-size: 1em;
+        font-family: Source Code Pro, monospace;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 1.5rem;
+        text-transform: uppercase;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="terminal">
+      <div class="lines">
+      </div>
+    </div>
+    <script type="text/javascript">
+      var percentageUpdateInterval = null;
+      var untilUpdateInterval = null;
+
+      function blankLine() {
+        let template = "<div class='line'>&nbsp;&nbsp;&nbsp;</div>";
+
+        document.getElementsByClassName("lines")[0].innerHTML = document.getElementsByClassName("lines")[0].innerHTML + template;
+      }
+
+      function writeLine(text, delay = 25, id, callback = () => {}) {
+        let template = "<div class='line' id='activewrite'></div>";
+        text = text.split("");
+
+        let written = "";
+
+        document.getElementsByClassName("lines")[0].innerHTML =
+        document.getElementsByClassName("lines")[0].innerHTML + template;
+
+        return new Promise((res, rej) => {
+          let i = 0;
+          let me = setInterval(() => {
+            if (i == text.length) {
+              document.getElementById("activewrite").id = id;
+              clearInterval(me);
+              callback();
+              res();
+            } else {
+              document.getElementById("activewrite").innerHTML = written + text[i];
+              written = written + text[i];
+              i = i + 1;
+            }
+          }, delay);
+        });
+      }
+
+      function sleep(delay) {
+        return new Promise((res, rej) => {
+          setTimeout(res, delay);
+        });
+      }
+
+      function updatePercentage() {
+        percentageUpdateInterval = setInterval(() => {
+          let n = new Date("Mar 04 2022 10:00:00 GMT-0800").getTime(),
+            t = new Date("Mar 11 2022 10:00:00 GMT-0800").getTime(),
+            e = t - n,
+            i =
+              Math.floor(Math.max(100, Math.min(100 * (1 - (n - Date.now()) / e)))) -
+              100;
+          document.getElementById("percent").innerHTML =
+            ">> loading percentage: " + i + "%";
+        }, 1000);
+      }
+
+      function timeFormatter(time) {
+        time = typeof time == "number" ? time : time.getTime();
+        let seconds = Math.floor((time / 1000) % 60);
+        let minutes = Math.floor((time / 1000 / 60) % 60);
+        let hours = Math.floor((time / 1000 / 60 / 60) % 24);
+        let days = Math.floor((time / 1000 / 60 / 60 / 24) % 7);
+
+        return {
+          days,
+          hours,
+          minutes,
+          seconds
+        };
+      }
+
+      function updateUntil() {
+        untilUpdateInterval = setInterval(() => {
+          let n = Date.now(),
+            t = new Date("Mar 11 2022 10:00:00 GMT-0800").getTime(),
+            e = t - n,
+            time = timeFormatter(e),
+            str =
+              time.days +
+              " day" +
+              (time.days == 1 ? "" : "s") +
+              " " +
+              time.hours +
+              " hour" +
+              (time.hours == 1 ? "" : "s") +
+              " " +
+              time.minutes +
+              " minute" +
+              (time.minutes == 1 ? "" : "s") +
+              " and " +
+              time.seconds +
+              " second" +
+              (time.seconds == 1 ? "" : "s");
+
+          document.getElementById("until").innerHTML = ">> completed in: " + str;
+        }, 1000);
+      }
+
+      setTimeout(async () => {
+        await writeLine(
+          ">> ssh -i ~/id_extrainfo upstanding-citizen@rataalada.com",
+          100
+        );
+
+        let n = Date.now(),
+          t = new Date("Mar 11 2022 10:00:00 GMT-0800").getTime(),
+          e = t - n;
+
+        if (e > 0) {
+          await sleep(1000);
+          blankLine();
+          await sleep(100);
+          await writeLine(
+            "upstanding-citizen@rataalada.com:~$ >> displayLoadProgress --full",
+            100
+          );
+          await sleep(2000);
+          blankLine();
+          await sleep(100);
+          await writeLine("loading percentage: 0%", 25, "percent", updatePercentage);
+          await writeLine(
+            "increase: 1% every 1 hour, 40 minutes, and 48 seconds",
+            25
+          );
+          await writeLine(
+            "completed in: 0 days, 0 hours, 0 minutes, 0 seconds",
+            25,
+            "until",
+            updateUntil
+          );
+          await writeLine(
+            "finishes on: " + new Date("Mar 11 2022 10:00:00 GMT-0800").toString(),
+            25
+          );
+          setInterval(() => {
+            if(t - Date.now() < 0) {
+              clearInterval(percentageUpdateInterval);
+              clearInterval(untilUpdateInterval);
+              document.getElementById("percent").innerHTML = "loading percentage: 100%";
+              document.getElementById("until").innerHTML = "completed in: 0 days, 0 hours, 0 minutes, 0 seconds";
+
+              await writeLine("Network Error: Software caused connection abort");
+              await writeLine(">> ", 10);
+            }
+          },1000);
+        } else {
+          await sleep(500);
+          await writeLine(
+            "ssh: connect to host rataalada.com port 22: connection refused"
+          );
+          await writeLine(">> ", 10);
+        }
+      });
+    </script>
+  </body>
+</html>
