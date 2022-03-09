@@ -1,0 +1,2 @@
+# rataalada-loading-info
+yes
