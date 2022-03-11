@@ -180,6 +180,10 @@
           await sleep(1000);
           blankLine();
           await sleep(100);
+          await writeLine("warning: connection latency high, ssh session may terminate unexpectedly");
+          await sleep(500);
+          blankLine();
+          await sleep(100);
           await writeLine(
             ">> displayLoadProgress --full",
             100
