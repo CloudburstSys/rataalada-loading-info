@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><?> Loading Info</title>
+    <title><?> ZIP</title>
     <style>
       body {
         background: black;
@@ -105,125 +105,52 @@
         });
       }
 
+      function writeLinkLine(text, href, delay = 25) {
+        let template = "<div class='line' id='activewrite'><a href=\""+href+"\"></a></div>";
+        text = text.split("");
+
+        let written = "";
+
+        document.getElementsByClassName("lines")[0].innerHTML =
+        document.getElementsByClassName("lines")[0].innerHTML + template;
+
+        return new Promise((res, rej) => {
+          let i = 0;
+          let me = setInterval(() => {
+            if (i == text.length) {
+              clearInterval(me);
+              res();
+            } else {
+              document.getElementById("activewrite").getElementsByTagName("a")[0].innerHTML = written + text[i];
+              written = written + text[i];
+              i = i + 1;
+            }
+          }, delay);
+        });
+      }
+
       function sleep(delay) {
         return new Promise((res, rej) => {
           setTimeout(res, delay);
         });
       }
+        
+      await writeLine(
+        ">> scp -i ~/id_extrainfo upstanding-citizen@rataalada.com:/var/www/opo/know_what_i_know.zip /var/www/know_what_i_know.zip",
+        100
+      );
 
-      function updatePercentage() {
-        percentageUpdateInterval = setInterval(() => {
-          let n = new Date("Mar 04 2022 10:00:00 GMT-0800").getTime(),
-            t = new Date("Mar 11 2022 10:00:00 GMT-0800").getTime(),
-            e = t - n,
-            i =
-              Math.floor(Math.max(100, Math.min(100 * (1 - (n - Date.now()) / e)))) -
-              100;
-          document.getElementById("percent").innerHTML =
-            "loading percentage: " + i + "%";
-        }, 100);
-      }
-
-      function timeFormatter(time) {
-        time = typeof time == "number" ? time : time.getTime();
-        let seconds = Math.floor((time / 1000) % 60);
-        let minutes = Math.floor((time / 1000 / 60) % 60);
-        let hours = Math.floor((time / 1000 / 60 / 60) % 24);
-        let days = Math.floor((time / 1000 / 60 / 60 / 24) % 7);
-
-        return {
-          days,
-          hours,
-          minutes,
-          seconds
-        };
-      }
-
-      function updateUntil() {
-        untilUpdateInterval = setInterval(() => {
-          let n = Date.now(),
-            t = new Date("Mar 11 2022 10:00:00 GMT-0800").getTime(),
-            e = t - n,
-            time = timeFormatter(e),
-            str =
-              time.days +
-              " day" +
-              (time.days == 1 ? "" : "s") +
-              " " +
-              time.hours +
-              " hour" +
-              (time.hours == 1 ? "" : "s") +
-              " " +
-              time.minutes +
-              " minute" +
-              (time.minutes == 1 ? "" : "s") +
-              " and " +
-              time.seconds +
-              " second" +
-              (time.seconds == 1 ? "" : "s");
-
-          document.getElementById("until").innerHTML = "completed in: " + str;
-        }, 100);
-      }
-
-      setTimeout(async () => {
-        await writeLine(
-          ">> ssh -i ~/id_extrainfo upstanding-citizen@rataalada.com",
-          100
-        );
-
-        let n = Date.now(),
-          t = new Date("Mar 11 2022 10:00:00 GMT-0800").getTime(),
-          e = t - n;
-
-        if (e > 0) {
-          await sleep(1000);
-          blankLine();
-          await sleep(100);
-          await writeLine("warning: connection latency high, ssh session may terminate unexpectedly");
-          await sleep(500);
-          blankLine();
-          await sleep(100);
-          await writeLine(
-            ">> displayLoadProgress --full",
-            100
-          );
-          await sleep(2000);
-          blankLine();
-          await sleep(100);
-          await writeLine("loading percentage: 0%", 25, "percent", updatePercentage);
-          await writeLine(
-            "increase: 1% every 1 hour, 40 minutes, and 48 seconds",
-            25
-          );
-          await writeLine(
-            "completed in: 0 days, 0 hours, 0 minutes, 0 seconds",
-            25,
-            "until",
-            updateUntil
-          );
-          await writeLine(
-            "finishes on: " + new Date("Mar 11 2022 10:00:00 GMT-0800").toString(),
-            25
-          );
-          setInterval(async () => {
-            if(t - Date.now() < 0) {
-              clearInterval(percentageUpdateInterval);
-              clearInterval(untilUpdateInterval);
-              document.getElementById("percent").innerHTML = "loading percentage: 100%";
-              document.getElementById("until").innerHTML = "completed in: 0 days, 0 hours, 0 minutes, 0 seconds";
-
-              await writeLine("Network Error: Software caused connection abort");
-              await writeLine(">> ", 10);
-            }
-          },100);
-        } else {
-          await sleep(500);
-          await writeLine(
-            "ssh: connect to host rataalada.com port 22: connection refused"
-          );
-          await writeLine(">> ", 10);
-        }
+      await sleep(1000);
+      blankLine();
+      await sleep(100);
+      await writeLine(
+        "know_what_i_know.zip                                                                  100%   20MB   20MB/s   00:00",
+        25
+      );
+      await sleep(100);
+      await writeLinkLine(
+        "[CLICK FOR CASE FILE]",
+        "https://rataalada.conep.one/know_what_i_know.zip"
       });
     </script>
   </body>
