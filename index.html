@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><?> ZIP</title>
+    <title><?> Countdown</title>
     <style>
       body {
         background: black;
@@ -142,6 +142,15 @@
         
       setTimeout(async () => {
         await writeLine(
+          "we're updating the website to add countdown info, give us a moment!"
+          25
+        );
+        await sleep(100);
+        await writeLine(
+          "- conep.one"
+          25
+        );
+        /*await writeLine(
           ">> scp -i ~/id_extrainfo upstanding-citizen@rataalada.com:/var/www/opo/know_what_i_know.zip /var/www/know_what_i_know.zip",
           100
         );
@@ -157,7 +166,7 @@
         await writeLinkLine(
           "[CLICK FOR CASE FILE]",
           "https://rataalada.conep.one/know_what_i_know.zip"
-        );
+        );*/
       });
     </script>
   </body>
