@@ -223,11 +223,9 @@
           t = new Date("Mar 24 2022 10:00:00 GMT-0700").getTime(),
           e = t - n;
 
-        blankLine();
-
-        await sleep(100);
-
         if (e > 0) {
+          blankLine();
+          await sleep(100);
           await writeLine(
             "completed in: 0 days, 0 hours, 0 minutes, 0 seconds",
             25,
