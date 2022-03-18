@@ -237,9 +237,10 @@
             "finishes on: " + new Date("Mar 24 2022 10:00:00 GMT-0700").toString(),
             25
           );
-          setInterval(async () => {
+          let endTrigger = setInterval(async () => {
             if(t - Date.now() < 0) {
               clearInterval(untilUpdateInterval);
+              clearInterval(endTrigger);
               document.getElementById("until").innerHTML = "completed in: 0 days, 0 hours, 0 minutes, 0 seconds";
 
               await writeLine(">> unmask the truth.", 500);
