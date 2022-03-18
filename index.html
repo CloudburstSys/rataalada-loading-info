@@ -75,7 +75,6 @@
       </div>
     </div>
     <script type="text/javascript">
-      var percentageUpdateInterval = null;
       var untilUpdateInterval = null;
 
       function blankLine() {
@@ -139,34 +138,121 @@
           setTimeout(res, delay);
         });
       }
-        
+
+      function timeFormatter(time) {
+        time = typeof time == "number" ? time : time.getTime();
+        let seconds = Math.floor((time / 1000) % 60);
+        let minutes = Math.floor((time / 1000 / 60) % 60);
+        let hours = Math.floor((time / 1000 / 60 / 60) % 24);
+        let days = Math.floor((time / 1000 / 60 / 60 / 24) % 7);
+
+        return {
+          days,
+          hours,
+          minutes,
+          seconds
+        };
+      }
+
+      function updateUntil() {
+        untilUpdateInterval = setInterval(() => {
+          let n = Date.now(),
+            t = new Date("Mar 24 2022 10:00:00 GMT-0700").getTime(),
+            e = t - n,
+            time = timeFormatter(e),
+            str =
+              time.days +
+              " day" +
+              (time.days == 1 ? "" : "s") +
+              " " +
+              time.hours +
+              " hour" +
+              (time.hours == 1 ? "" : "s") +
+              " " +
+              time.minutes +
+              " minute" +
+              (time.minutes == 1 ? "" : "s") +
+              " and " +
+              time.seconds +
+              " second" +
+              (time.seconds == 1 ? "" : "s");
+
+          document.getElementById("until").innerHTML = "completed in: " + str;
+        }, 100);
+      }
+
+      function tempEllipsis() {
+        let ellipsis = setInterval(() => {
+          document.getElementById("ellipsis").innerHTML = ">> just kidding yourself";
+          setTimeout(() => {
+            document.getElementById("ellipsis").innerHTML = ">> just kidding yourself.";
+          },100);
+          setTimeout(() => {
+            document.getElementById("ellipsis").innerHTML = ">> just kidding yourself..";
+          },200);
+          setTimeout(() => {
+            document.getElementById("ellipsis").innerHTML = ">> just kidding yourself...";
+          },300);
+        },400);
+
+        setTimeout(() => {
+          clearInterval(ellipsis);
+          document.getElementById("ellipsis").innerHTML = ">> just kidding yourself";
+        }, 5000);
+      }
+
       setTimeout(async () => {
         await writeLine(
-          "we're updating the website to add countdown info, give us a moment!"
-          25
-        );
-        await sleep(100);
-        await writeLine(
-          "- conep.one"
-          25
-        );
-        /*await writeLine(
-          ">> scp -i ~/id_extrainfo upstanding-citizen@rataalada.com:/var/www/opo/know_what_i_know.zip /var/www/know_what_i_know.zip",
-          100
+          ">> just kidding yourself",
+          100,
+          "ellipsis",
+           tempEllipsis
         );
 
-        await sleep(1000);
-        blankLine();
         await sleep(100);
-        await writeLine(
-          "know_what_i_know.zip                                                                  100%   20MB   20MB/s   00:00",
-          25
-        );
-        await sleep(100);
+
         await writeLinkLine(
           "[CLICK FOR CASE FILE]",
-          "https://rataalada.conep.one/know_what_i_know.zip"
-        );*/
+          "https://rataalada.conep.one/know_what_i_know.zip",
+          0
+        );
+
+        await sleep(4900);
+
+        let n = Date.now(),
+          t = new Date("Mar 24 2022 10:00:00 GMT-0700").getTime(),
+          e = t - n;
+
+        blankLine();
+
+        await sleep(100);
+
+        if (e > 0) {
+          await writeLine(
+            "completed in: 0 days, 0 hours, 0 minutes, 0 seconds",
+            25,
+            "until",
+            updateUntil
+          );
+          await writeLine(
+            "finishes on: " + new Date("Mar 24 2022 10:00:00 GMT-0700").toString(),
+            25
+          );
+          setInterval(async () => {
+            if(t - Date.now() < 0) {
+              clearInterval(untilUpdateInterval);
+              document.getElementById("until").innerHTML = "completed in: 0 days, 0 hours, 0 minutes, 0 seconds";
+
+              await writeLine(">> unmask the truth.", 500);
+            }
+          },100);
+        } else {
+          await sleep(500);
+          await writeLine(
+            ">> unmask the truth.",
+            500
+          );
+        }
       });
     </script>
   </body>
