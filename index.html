@@ -217,6 +217,8 @@
           0
         );
 
+        blankLine();
+
         await sleep(4900);
 
         let n = Date.now(),
@@ -224,8 +226,6 @@
           e = t - n;
 
         if (e > 0) {
-          blankLine();
-          await sleep(100);
           await writeLine(
             "completed in: 0 days, 0 hours, 0 minutes, 0 seconds",
             25,
