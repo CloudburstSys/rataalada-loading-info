@@ -122,6 +122,7 @@
           let i = 0;
           let me = setInterval(() => {
             if (i == text.length) {
+              document.getElementById("activewrite").id = "";
               clearInterval(me);
               res();
             } else {
